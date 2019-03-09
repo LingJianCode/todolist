@@ -3,3 +3,7 @@
 *.vbp
 *.vbw
 *.txt
+*.spec
+__pycache__
+build/*
+dist/*
