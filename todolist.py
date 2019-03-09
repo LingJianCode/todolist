@@ -84,25 +84,29 @@ class Application(Application_ui):
             with open(self.undo_file_name, 'r', encoding='utf-8') as f:
                 for not_ok_task in f.readlines():
                     if not_ok_task:
-                        self.task_list.insert(0, not_ok_task)
+                        self.task_list.insert(0, not_ok_task.strip())
 
     def delete_Cmd(self, event=None):
         #完成任务存入文件
         okTask = self.task_list.get(ACTIVE)
+        # print(okTask)
         if len(okTask) > 1:
             #删除的时候从undo里删除，并转存至done
             with open(self.undo_file_name, 'r+', encoding='utf-8') as f:
                 undo_list = f.readlines()
             for not_ok_task in undo_list:
-                if not_ok_task == okTask+'\n':
-                    print(not_ok_task)
+                #由于\n问题的存在，需要在从文件读取时进行处理
+                if not_ok_task.strip() == okTask:
+                    # print(not_ok_task)
                     undo_list.remove(not_ok_task)
             with open(self.undo_file_name, 'w', encoding='utf-8') as f:
+                # print(undo_list)
                 for not_ok_task in undo_list:
                     f.write(not_ok_task)
 
             now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            okTask = now_time + '  完成任务:  ' + okTask
+            okTask = now_time + '  完成任务:  ' + okTask.strip()
+            print(okTask)
             self.saveToFile(okTask ,self.done_file_name)
         self.task_list.delete(ACTIVE)
 
